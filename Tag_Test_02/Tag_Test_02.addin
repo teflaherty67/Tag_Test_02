@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command Tag_Test_02</Text>
+    <Description>Some description for Tag_Test_02</Description>
+    <Assembly>Tag_Test_02.dll</Assembly>
+    <FullClassName>Tag_Test_02.Command</FullClassName>
+    <ClientId>f703bb53-e807-4199-bc3c-b351693b1aa8</ClientId>
+    <VendorId>com.YOUR COMPANY NAME</VendorId>
+    <VendorDescription>YOUR COMPANY NAME, YOUR COMPANY URL</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application Tag_Test_02</Name>
+    <Assembly>Tag_Test_02.dll</Assembly>
+    <FullClassName>Tag_Test_02.App</FullClassName>
+    <ClientId>62a382b1-b652-45b1-a0c6-b83923883d45</ClientId>
+    <VendorId>com.YOUR COMPANY NAME</VendorId>
+    <VendorDescription>YOUR COMPANY NAME, YOUR COMPANY URL</VendorDescription>
+  </AddIn>
+</RevitAddIns>
