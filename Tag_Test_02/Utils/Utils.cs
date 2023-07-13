@@ -37,6 +37,98 @@ namespace Tag_Test_02
 
         #region Tags
 
+        internal static bool ElementIsTagged(Document curDoc, View viewName, Element elem, BuiltInCategory bicTag, BuiltInCategory bicElements)
+        {
+            // collect the tags
+            List<Element> m_colTags = new FilteredElementCollector(curDoc, viewName.Id)
+                .OfCategory(bicTag)
+                .Where(x => x is IndependentTag)
+                .ToList();
+
+            // collect the elements
+            List<Element> m_colElems = new FilteredElementCollector(curDoc, viewName.Id)
+                .OfCategory(bicElements)
+                .ToList();
+
+            // extract the IDs of the tagged elements
+            List<ElementId> elemIDs = new List<ElementId>();
+
+            foreach (Element curElem in m_colTags)
+            {
+                IndependentTag curTag = curElem as IndependentTag;
+
+                ElementId elemId = curTag.TaggedLocalElementId;
+
+                int aux1 = curTag.TaggedLocalElementId.IntegerValue;
+
+                bool aux2 = elemIds.Contains(curTag.TaggedLocalElementId);
+
+                if ((tag.TaggedLocalElementId.IntegerValue != -1)
+                    && (ids.Contains(tag.TaggedLocalElementId) == false))
+                {
+                    ids.Add(tag.TaggedLocalElementId);
+                }
+            }
+
+            // Transforma a una lista de Unique Items
+            List<ElementId> uniqueIds = ids.Distinct().ToList();
+
+            // Se extraen los ids de los elementos
+            List<ElementId> eleIds = new List<ElementId>();
+
+            foreach (Element e in eleColl)
+            {
+                eleIds.Add(e.Id);
+            }
+
+            // Se compara si los elementos estan taggeados
+            List<ElementId> idEleTag = new List<ElementId>();
+
+            foreach (ElementId id in eleIds)
+            {
+                if (uniqueIds.Contains(id))
+                {
+                    idEleTag.Add(id);
+                }
+            }
+
+            // COMPARACION - Si el elemento esta en la lista de elementos taggeados, entrega "true"
+            // de lo contrario, entrega "false".
+
+            if (idEleTag.Contains(ele.Id))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        internal static FamilySymbol GetTagByName(Document curDoc, string tagName)
+        {
+            // get all loaded door & window tags
+            List<BuiltInCategory> m_colTags = new List<BuiltInCategory>();
+            m_colTags.Add(BuiltInCategory.OST_DoorTags);
+            m_colTags.Add(BuiltInCategory.OST_WindowTags);
+
+            ElementMulticategoryFilter filter = new ElementMulticategoryFilter(m_colTags);
+
+            IList<Element> tElements = new FilteredElementCollector(curDoc)
+                .WherePasses(filter)
+                .WhereElementIsElementType()
+                .ToElements();
+
+            foreach (Element elem in tElements)
+            {
+                if (elem.get_Parameter(BuiltInParameter.SYMBOL_FAMILY_NAME_PARAM).AsString() == tagName)
+                    return elem as FamilySymbol;
+            }
+
+            return null;
+        }
+
         internal static void TagAllUntaggedDoorsWindowsInView(Document curDoc, View viewName, string tagName)
         {
             // create multicategory list
@@ -55,7 +147,20 @@ namespace Tag_Test_02
 
             // filter out already tagged doors & windows - How??
 
-            // set the tag family - How??
+            // collect all the tags in the view
+            List<Element> m_colTags = new FilteredElementCollector(curDoc, viewName.Id)
+               .OfCategory(BuiltInCategory.OST_Tags)
+               .Where(x => x is IndependentTag)
+               .ToList();
+
+            // collect all the elements in the view
+            List<Element> m_colElements = new FilteredElementCollector(doc, doc.ActiveView.Id)
+                .OfCategory(BuiltInCategory.Ele)
+                .ToList();
+
+            // set the tag family
+            FamilySymbol tagDoor = Utils.GetTagByName(curDoc, "Door Tag-Type Comments");
+            FamilySymbol tagWndw = Utils.GetTagByName(curDoc, "Window Tag-Type Name and Head Height");
 
             // set the tag parameters
             TagMode tMode = TagMode.TM_ADDBY_CATEGORY;
