@@ -46,7 +46,6 @@ namespace Tag_Test_02
                 .Where(x => x is IndependentTag)
                 .ToList();
 
-
             // collect the elements in current view
             List<Element> m_colElems = new FilteredElementCollector(curDoc, viewName.Id)
                 .OfCategory(bicElements)
