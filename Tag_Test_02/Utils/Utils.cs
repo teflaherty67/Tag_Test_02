@@ -37,65 +37,65 @@ namespace Tag_Test_02
 
         #region Tags
 
-        internal static bool ElementIsTagged(Document curDoc, View viewName, Element elem, BuiltInCategory bicTag, BuiltInCategory bicElements)
+        internal static bool ElementIsTagged(Document curDoc, View viewName, Element elem,
+            BuiltInCategory bicTags, BuiltInCategory bicElements)
         {
-            // collect the tags
+            // collect the tags in current view
             List<Element> m_colTags = new FilteredElementCollector(curDoc, viewName.Id)
-                .OfCategory(bicTag)
+                .OfCategory(bicTags)
                 .Where(x => x is IndependentTag)
                 .ToList();
 
-            // collect the elements
+
+            // collect the elements in current view
             List<Element> m_colElems = new FilteredElementCollector(curDoc, viewName.Id)
                 .OfCategory(bicElements)
                 .ToList();
 
-            // extract the IDs of the tagged elements
-            List<ElementId> elemIDs = new List<ElementId>();
+            // extract the Id of the tagged elements
+            List<ElementId> elemIds = new List<ElementId>();
 
             foreach (Element curElem in m_colTags)
             {
                 IndependentTag curTag = curElem as IndependentTag;
 
-                ElementId elemId = curTag.TaggedLocalElementId;
+                ElementId curElemId = curTag.TaggedLocalElementId;
 
                 int aux1 = curTag.TaggedLocalElementId.IntegerValue;
 
                 bool aux2 = elemIds.Contains(curTag.TaggedLocalElementId);
 
-                if ((tag.TaggedLocalElementId.IntegerValue != -1)
-                    && (ids.Contains(tag.TaggedLocalElementId) == false))
+                if ((curTag.TaggedLocalElementId.IntegerValue != -1) && (elemIds.Contains(curTag.TaggedLocalElementId) == false))
                 {
-                    ids.Add(tag.TaggedLocalElementId);
+                    elemIds.Add(curTag.TaggedLocalElementId);
                 }
             }
 
-            // Transforma a una lista de Unique Items
-            List<ElementId> uniqueIds = ids.Distinct().ToList();
+            // transform to list of unique Ids
+            List<ElementId> uniqueIds = elemIds.Distinct().ToList();
 
-            // Se extraen los ids de los elementos
-            List<ElementId> eleIds = new List<ElementId>();
+            // extract the Id of the elements
+            List<ElementId> elementIds = new List<ElementId>();
 
-            foreach (Element e in eleColl)
+            foreach (Element curElem in m_colElems)
             {
-                eleIds.Add(e.Id);
+                elementIds.Add(curElem.Id);
             }
 
-            // Se compara si los elementos estan taggeados
-            List<ElementId> idEleTag = new List<ElementId>();
+            // check if the elements are tagged
+            List<ElementId> elemTagId = new List<ElementId>();
 
-            foreach (ElementId id in eleIds)
+            foreach (ElementId curId in elementIds)
             {
-                if (uniqueIds.Contains(id))
+                if (uniqueIds.Contains(curId))
                 {
-                    idEleTag.Add(id);
+                    elemTagId.Add(curId);
                 }
             }
 
-            // COMPARACION - Si el elemento esta en la lista de elementos taggeados, entrega "true"
-            // de lo contrario, entrega "false".
+            // if element is tagged return true, otherwise retrun false
 
-            if (idEleTag.Contains(ele.Id))
+            if (elemTagId.Contains(elem.Id))
             {
                 return true;
             }
@@ -154,8 +154,8 @@ namespace Tag_Test_02
                .ToList();
 
             // collect all the elements in the view
-            List<Element> m_colElements = new FilteredElementCollector(doc, doc.ActiveView.Id)
-                .OfCategory(BuiltInCategory.Ele)
+            List<Element> m_colElements = new FilteredElementCollector(curDoc, viewName.Id)
+                .OfCategory(BuiltInCategory.OST_Doors)
                 .ToList();
 
             // set the tag family
